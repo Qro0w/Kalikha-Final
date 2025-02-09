@@ -1,28 +1,72 @@
-// src/components/Buyer/ProductCard.jsx
 import React from "react";
 
-const ProductCard = () => {
+const ProductCard = ({ product }) => {
+  const productImage = product.image || "/assets/pics/painting.jpg";
+
   return (
     <div style={styles.card}>
-      <img src="https://via.placeholder.com/150" alt="Product" style={styles.image} />
-      <h3>Product Name</h3>
-      <p>Price: $10.00</p>
+
+      {/* Display seller information */}
+      {product.seller && (
+        <div style={styles.sellerInfo}>
+          <img
+            //src={product.seller.profilePic || "/assets/pics/product.jpg"}  // Fallback for profile pic
+            src={"/assets/pics/product.jpg"}
+            alt={product.seller.name}
+            style={styles.sellerImage}
+          />
+          <p style={styles.sellerName}><strong>Seller:</strong> {product.seller.name}</p>
+        </div>
+      )} 
+
+      {/* Display the product image */}
+      <img src={productImage} alt={product.name} style={styles.image} />
+      
+      <div style={styles.details}>
+        {/* Display product name */}
+        <h3 style={styles.productName}>{product.name}</h3>
+        
+        {/* Display product description */}
+        <p style={styles.description}>{product.description}</p>
+        
+        {/* Display product price */}
+        <p style={styles.price}><strong>Price:</strong> ₱{product.price}</p>
+
+      </div>
     </div>
   );
 };
 
-// Minimal styling
 const styles = {
   card: {
-    border: "1px solid #ddd",
-    borderRadius: "5px",
-    padding: "10px",
-    width: "150px",
-    textAlign: "center",
+    width: "250px",
+    borderRadius: "8px",
+    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+    overflow: "hidden",
+    transition: "transform 0.3s",
+    cursor: "pointer",
   },
   image: {
-    width: "100%",
-    height: "auto",
+    height: "200px",
+    objectFit: "cover",
+    padding: "20px",
+  },
+  details: {
+    padding: "15px",
+    textAlign: "left",
+  },
+  sellerInfo: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "left",
+    paddingLeft: "10px",
+    gap: "10px",
+  },
+  sellerImage: {
+    width: "30px",
+    height: "30px",
+    borderRadius: "50%",
+    objectFit: "cover",
   },
 };
 
