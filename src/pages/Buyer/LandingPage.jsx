@@ -1,6 +1,7 @@
 // src/pages/Buyer/LandingPage.jsx
 import React from "react";
 import Navbar from "../../components/Buyer/Navbar";
+import HomepageSection from "../../components/Buyer/HomepageSection";
 import CategorySection from "../../components/Buyer/CategorySection";
 import ProductsSection from "../../components/Buyer/ProductsSection";
 
@@ -9,6 +10,7 @@ const LandingPage = () => {
     <div>
       <Navbar />
       <div style={styles.container}>
+        <HomepageSection />
         <CategorySection />
         <ProductsSection />
       </div>
@@ -19,7 +21,7 @@ const LandingPage = () => {
 // Minimal styling
 const styles = {
   container: {
-    padding: "20px",
+    backgroundColor: "#f8f9fa",
   },
 };
 

@@ -1,12 +1,14 @@
-// src/components/Buyer/ProfileWidget.jsx
 import React from "react";
 
 const ProfileWidget = ({ isOpen, onToggle, icon }) => {
   return (
     <div style={styles.container}>
-      <div onClick={onToggle} style={styles.icon}>
-        {icon}
-      </div>
+      {/* Render the profile icon only when it's not open */}
+      {!isOpen && (
+        <div onClick={onToggle} style={styles.icon}>
+          {icon}
+        </div>
+      )}
       {isOpen && (
         <div style={styles.dropdown}>
           <p>Welcome, User!</p>
@@ -21,26 +23,30 @@ const ProfileWidget = ({ isOpen, onToggle, icon }) => {
 // Minimal styling
 const styles = {
   container: {
-    position: "relative",
+    position: "relative", // This ensures the dropdown is positioned relative to the container
   },
   icon: {
     cursor: "pointer",
   },
   dropdown: {
     position: "absolute",
-    top: "30px",
-    right: "0",
     backgroundColor: "#fff",
     border: "1px solid #ddd",
     borderRadius: "5px",
     padding: "10px",
     width: "200px",
     boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+    zIndex: 1200, // Keep it above other content
   },
   actionButton: {
     marginTop: "5px",
-    padding: "2px 5px",
+    padding: "5px 10px",
     cursor: "pointer",
+    backgroundColor: "#f1f1f1",
+    border: "none",
+    borderRadius: "3px",
+    width: "100%",
+    textAlign: "left",
   },
 };
 

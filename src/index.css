@@ -1,0 +1,12 @@
+@font-face {
+    font-family: 'Felix Titling';
+    src: url('/assets/fonts/FelixTitling.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+  }
+  @font-face {
+    font-family: 'Felix Titling';
+    src: url('/assets/fonts/AmstelvarAlpha.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+  }

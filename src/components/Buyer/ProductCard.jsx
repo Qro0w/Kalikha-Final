@@ -1,7 +1,7 @@
 import React from "react";
 
 const ProductCard = ({ product }) => {
-  const productImage = product.image || "/assets/pics/painting.jpg";
+  const productImage = product.image || "/assets/pics/product.png";
 
   return (
     <div style={styles.card}>
@@ -47,9 +47,8 @@ const styles = {
     cursor: "pointer",
   },
   image: {
-    height: "200px",
+    height: "18vh",
     objectFit: "cover",
-    padding: "20px",
   },
   details: {
     padding: "15px",

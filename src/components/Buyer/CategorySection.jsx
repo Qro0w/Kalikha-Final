@@ -57,7 +57,7 @@ const CategorySection = () => {
 
   return (
     <div style={styles.container}>
-      <h2 style={styles.title}>Categories</h2>
+      <h2 id="categories" style={styles.title}>Categories</h2>
       <div style={styles.categories}>
         {categories.map((category, index) => (
           <div
@@ -125,12 +125,12 @@ const styles = {
     fontSize: "34px",
     font: "Arial",
     paddingBottom: "20px",
+    paddingTop: "5%"
   },
   categories: {
     display: "flex",
     justifyContent: "space-between",
     flexWrap: "wrap",
-    gap: "10px",
   },
   category: {
     position: "relative",
@@ -174,12 +174,12 @@ const styles = {
     color: "#fff",
     padding: "80px",
     borderRadius: "5px",
-    width: "50%",
+    width: "90%",
     transition: "opacity 0.4s ease, transform 0.4s ease",
     zIndex: 2,
   },
   subcategory: {
-    padding: "15px 30px",
+    padding: "15px",
     borderRadius: "18px",
     border: "2px solid white",
     textAlign: "center",

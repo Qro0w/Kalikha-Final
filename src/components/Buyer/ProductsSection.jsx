@@ -16,16 +16,43 @@ const ProductsSection = ({ subcategory }) => {
         }
 
         const db = getFirestore();
-        
+
         // Normalize the subcategory to match Firestore's case (e.g., "Painting" -> "Painting")
         const normalizedSubcategory = subcategory.charAt(0).toUpperCase() + subcategory.slice(1);
-        
+
+        // Determine the category for the selected subcategory
+        const categoryMapping = {
+          "Painting": "Visual Arts",
+          "Sculpture": "Visual Arts",
+          "Digital Art": "Visual Arts",
+          "Printmaking": "Visual Arts",
+          "Textile": "Crafts",
+          "Ceramics": "Crafts",
+          "Woodwork": "Crafts",
+          "Glass": "Crafts",
+          "Poetry": "Literary Arts",
+          "Prose": "Literary Arts",
+          "Drama": "Literary Arts",
+          "Essays": "Literary Arts",
+          "Portrait": "Photography",
+          "Landscape": "Photography",
+          "Street": "Photography",
+          "Macro": "Photography"
+        };
+
+        const category = categoryMapping[normalizedSubcategory];
+        if (!category) {
+          console.log(`No matching category found for subcategory: ${normalizedSubcategory}`);
+          setLoading(false);
+          return;
+        }
+
         // Log the Firestore path we are querying
         console.log(`Executing Firestore query for subcategory: ${normalizedSubcategory}`);
-        console.log(`Firestore path: categories/Visual Arts/${normalizedSubcategory}`);
-        
+        console.log(`Firestore path: categories/${category}/${normalizedSubcategory}`);
+
         // Fetch products under the subcategory
-        const productsRef = collection(db, "categories", "Visual Arts", normalizedSubcategory);
+        const productsRef = collection(db, "categories", category, normalizedSubcategory);
         const q = query(productsRef);
 
         const querySnapshot = await getDocs(q);
@@ -62,7 +89,7 @@ const ProductsSection = ({ subcategory }) => {
               <ProductCard key={product.id} product={product} />
             ))
           ) : (
-            <p></p>
+            <p>No products found.</p>
           )}
         </div>
       )}
