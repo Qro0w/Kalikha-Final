@@ -1,3 +1,6 @@
+body::-webkit-scrollbar {
+  display: none;
+}
 @font-face {
     font-family: 'Felix Titling';
     src: url('/assets/fonts/FelixTitling.ttf') format('truetype');

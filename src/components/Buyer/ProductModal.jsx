@@ -1,81 +1,114 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { db } from "../../firebase"; // Adjust import based on your project structure
+import { collection, doc, getDoc, setDoc, addDoc, serverTimestamp } from "firebase/firestore";
 
 const ProductModal = ({ product, onClose }) => {
   const navigate = useNavigate();
-
-  if (!product) return null; // Prevents crashes if product data is missing
-
   const [selectedImage, setSelectedImage] = useState(product.images?.[0] || "/assets/pics/product.png");
+  const [offerAmount, setOfferAmount] = useState(""); // Store user input for offer
+  const [user, setUser] = useState({
+    uid: "mock_user_uid", // Use a placeholder user ID for now
+    name: "Mock User", // Use a placeholder user name for now
+  });
 
-  // Close modal when clicking outside
-  const handleOverlayClick = (e) => {
-    if (e.target.id === "modal-overlay") {
-      onClose();
+  // Function to send an offer message
+  const handleMakeOffer = async () => {
+    if (!offerAmount) return alert("Please enter an offer amount.");
+  
+    try {
+      const buyerId = "mock_user_uid"; // Use a mock user ID for now
+      const sellerId = product.seller?.id || "mock_seller_id"; // If no seller ID, use a mock seller ID
+  
+      // Generate a unique conversation ID (for now, based on mock user IDs)
+      const convoId = buyerId < sellerId ? `${buyerId}_${sellerId}` : `${sellerId}_${buyerId}`;
+  
+      // Reference to the conversation document
+      const convoRef = doc(db, "conversations", convoId);
+      const convoSnap = await getDoc(convoRef);
+  
+      // If the conversation doesn't exist, create a new one
+      if (!convoSnap.exists()) {
+        await setDoc(convoRef, {
+          participants: [buyerId, sellerId],
+          lastMessage: `Offer: ₱${offerAmount}`,
+          lastTimestamp: serverTimestamp(),
+        });
+      }
+  
+      // Reference to the messages subcollection
+      const messagesRef = collection(db, "conversations", convoId, "messages");
+  
+      // Add the message to the conversation
+      await addDoc(messagesRef, {
+        sender: buyerId,
+        recipient: sellerId,
+        text: `Offer: ₱${offerAmount}`,
+        timestamp: serverTimestamp(),
+        type: "offer", // Message type can be optional
+        imageURL: "", // No image for now
+      });
+  
+      // Navigate to the inbox page
+      navigate("/inbox");
+    } catch (error) {
+      console.error("Error sending offer:", error);
     }
   };
+  
+  
+  
 
   return (
-    <div id="modal-overlay" style={styles.overlay} onClick={handleOverlayClick}>
+    <div id="modal-overlay" style={styles.overlay} onClick={(e) => e.target.id === "modal-overlay" && onClose()}>
       <div style={styles.modal} onClick={(e) => e.stopPropagation()}>
-        <button style={styles.closeButton} onClick={onClose}>
-          ✖
-        </button>
+        <button style={styles.closeButton} onClick={onClose}>✖</button>
 
         <div style={styles.content}>
-          {/* Left Side: Image Section */}
           <div style={styles.imageSection}>
-            {/* Main Image */}
             <img src={selectedImage} alt="Product" style={styles.mainImage} />
-
-            {/* Thumbnails */}
             <div style={styles.thumbnails}>
               {product.images?.map((img, index) => (
                 <img
                   key={index}
                   src={img}
                   alt={`Thumbnail ${index + 1}`}
-                  style={{
-                    ...styles.thumbnail,
-                    border: selectedImage === img ? "2px solid black" : "none",
-                  }}
+                  style={{ ...styles.thumbnail, border: selectedImage === img ? "2px solid black" : "none" }}
                   onClick={() => setSelectedImage(img)}
                 />
               ))}
             </div>
           </div>
 
-          {/* Right Side: Product Details */}
           <div style={styles.details}>
             <h2>{product.name}</h2>
             <p>{product.description}</p>
-            <p style={styles.price}>
-              <strong>Price:</strong> ₱{product.price} or Offer
-            </p>
+            <p style={styles.price}><strong>Price:</strong> ₱{product.price} or Offer</p>
 
-            {/* Seller Info Section */}
             {product.seller && (
               <div style={styles.sellerBox}>
                 <div style={styles.sellerInfo}>
-                  <img
-                    src={"/assets/pics/product.jpg"}
-                    alt={product.seller.name}
-                    style={styles.sellerImage}
-                  />
-                  <p>
-                    <strong>Seller:</strong> {product.seller.name}
-                  </p>
+                  <img src={"/assets/pics/product.jpg"} alt={product.seller.name} style={styles.sellerImage} />
+                  <p><strong>Seller:</strong> {product.seller.name}</p>
                 </div>
 
-                {/* Buttons (Vertically Aligned) */}
-                <div style={styles.actions}>
-                  <button style={styles.button} onClick={() => navigate("/inbox")}>
-                    Chat with Seller
-                  </button>
-                  <button style={styles.button} onClick={() => navigate("/inbox")}>
+                <button style={styles.button} onClick={() => navigate("/inbox")}>
+                  Chat with Seller
+                </button>
+
+                <div style={styles.makeOfferContainer}>
+                  <input
+                    type="number"
+                    placeholder="Enter offer"
+                    value={offerAmount}
+                    onChange={(e) => setOfferAmount(e.target.value)}
+                    style={styles.offerInput}
+                  />
+                  <button style={styles.offerButton} onClick={handleMakeOffer}>
                     Make Offer
                   </button>
                 </div>
+
               </div>
             )}
           </div>
@@ -85,7 +118,8 @@ const ProductModal = ({ product, onClose }) => {
   );
 };
 
-// Modal Styles
+
+// Updated Styles (Make Offer Section Fixed)
 const styles = {
   overlay: {
     width: "100%",
@@ -176,21 +210,39 @@ const styles = {
     height: "40px",
     borderRadius: "50%",
   },
-  actions: {
-    display: "flex",
-    flexDirection: "column",
-    gap: "10px",
-    width: "100%",
-    marginTop: "10px",
-  },
   button: {
-    width: "100%",
-    padding: "10px",
+    width: "85%",
+    padding: "15px",
     border: "none",
     backgroundColor: "#000",
     color: "#fff",
     cursor: "pointer",
-    borderRadius: "5px",
+    borderRadius: "17px",
+    marginTop: "20px",
+    marginBottom: "10px",
+  },
+  makeOfferContainer: {
+    display: "flex",
+    width: "85%",
+    alignItems: "center",
+    border: "2px solid #ccc",
+    borderRadius: "17px",
+    overflow: "hidden",
+    backgroundColor: "#fff"
+  },
+  offerInput: {
+    flex: 1,
+    padding: "12px",
+    border: "none",
+    outline: "none",
+    fontSize: "14px",
+    backgroundColor: "transparent",
+  },
+  offerButton: {
+    padding: "4px",
+    border: "none",
+    cursor: "pointer",
+    fontSize: "16px",
   },
 };
 

@@ -67,7 +67,6 @@ const Navbar = () => {
           onChange={handleSearchChange} // Update searchQuery on input change
           style={styles.searchInput}
         />
-        <button style={styles.filterButton}>Filter</button>
       </div>
 
       {/* Right Side Links */}
@@ -133,25 +132,17 @@ const styles = {
     textDecoration: "none",
     color: "#333",
   },
-  searchFilter: {
-    display: "flex",
-    gap: "15px",
-  },
   searchInput: {
     padding: "5px",
     width: "600px",
     height: "30px",
   },
-  filterButton: {
-    padding: "5px 10px",
-    cursor: "pointer",
-  },
   navRight: {
     display: "flex",
-    gap: "20px",
+    gap: "60px",
     alignItems: "center",
     zIndex: 1100,
-    paddingRight: "20px", // Add space between profile icon and the edge
+    paddingRight: "60px", // Add space between profile icon and the edge
     position: "relative", // Ensure positioning of profile widget
   },
   link: {

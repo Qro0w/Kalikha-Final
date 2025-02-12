@@ -3,6 +3,7 @@ import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 import { getAnalytics, isSupported } from "firebase/analytics"; // Ensure correct imports
+import { getStorage } from "firebase/storage";
 
 // 🔥 Your Firebase Config (Replace with your actual config)
 const firebaseConfig = {
@@ -19,6 +20,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const auth = getAuth(app);
+const storage = getStorage(app);
 
 // ✅ Conditionally initialize Analytics
 let analytics;
@@ -33,4 +35,4 @@ isSupported()
   })
   .catch((error) => console.error("❌ Error checking Analytics support:", error));
 
-export { app, db, auth, analytics };
+export { app, db, auth, storage, analytics };

@@ -12,12 +12,6 @@ const SellerNavbar = ({ activeTab, setActiveTab }) => {
         >
           Dashboard
         </button>
-        <button
-          onClick={() => setActiveTab("inbox")}
-          style={activeTab === "inbox" ? styles.activeLink : styles.link}
-        >
-          Inbox
-        </button>
         {/* Add more tabs as needed */}
       </div>
     </nav>
