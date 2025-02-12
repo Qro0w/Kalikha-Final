@@ -1,38 +1,49 @@
-import React from "react";
+import React, { useState } from "react";
+import ProductModal from "./ProductModal";
 
 const ProductCard = ({ product }) => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  
   const productImage = product.image || "/assets/pics/product.png";
 
   return (
-    <div style={styles.card}>
+    <div style={styles.card} onClick={() => setIsModalOpen(true)}>
 
-      {/* Display seller information */}
+      {/* Display seller information (Only if seller exists) */}
       {product.seller && (
         <div style={styles.sellerInfo}>
           <img
-            //src={product.seller.profilePic || "/assets/pics/product.jpg"}  // Fallback for profile pic
-            src={"/assets/pics/product.jpg"}
-            alt={product.seller.name}
+            src={product.seller.profilePic || "/assets/pics/product.jpg"}
+            alt={product.seller?.name || "Seller"}
             style={styles.sellerImage}
           />
-          <p style={styles.sellerName}><strong>Seller:</strong> {product.seller.name}</p>
+          <p style={styles.sellerName}>
+            <strong>Seller:</strong> {product.seller?.name || "Unknown"}
+          </p>
         </div>
-      )} 
+      )}
 
-      {/* Display the product image */}
+      {/* Display product image */}
       <img src={productImage} alt={product.name} style={styles.image} />
       
       <div style={styles.details}>
-        {/* Display product name */}
-        <h3 style={styles.productName}>{product.name}</h3>
+        {/* Product Name */}
+        <h3 style={styles.productName}>{product.name || "Unnamed Product"}</h3>
         
-        {/* Display product description */}
-        <p style={styles.description}>{product.description}</p>
+        {/* Product Description */}
+        <p style={styles.description}>{product.description || "No description available."}</p>
         
-        {/* Display product price */}
-        <p style={styles.price}><strong>Price:</strong> ₱{product.price}</p>
-
+        {/* Product Price */}
+        <p style={styles.price}><strong>Price:</strong> ₱{product.price || "N/A"}</p>
       </div>
+
+      {/* Product Modal */}
+      {isModalOpen && (
+        <ProductModal 
+          product={product} 
+          onClose={() => setIsModalOpen(false)} 
+        />
+      )}
     </div>
   );
 };
@@ -47,6 +58,7 @@ const styles = {
     cursor: "pointer",
   },
   image: {
+    width: "100%",
     height: "18vh",
     objectFit: "cover",
   },
