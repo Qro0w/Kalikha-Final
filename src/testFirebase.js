@@ -1,3 +1,6 @@
+// FIREBASE TESTER DO NOT TOUCH
+
+
 import { db } from "./firebase.js";
 import { collection, getDocs } from "firebase/firestore";
 

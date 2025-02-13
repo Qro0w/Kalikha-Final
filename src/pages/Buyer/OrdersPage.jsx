@@ -1,6 +1,7 @@
-// src/pages/Buyer/OrdersPage.jsx
 import React from "react";
 import Navbar from "../../components/Buyer/Navbar";
+
+// ORDERS PAGE STATIC
 
 const OrdersPage = () => {
   return (
@@ -21,7 +22,6 @@ const OrdersPage = () => {
   );
 };
 
-// Minimal styling
 const styles = {
   container: {
     padding: "20px",

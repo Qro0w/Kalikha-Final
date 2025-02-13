@@ -4,17 +4,17 @@ import LandingPage from "./pages/Buyer/LandingPage";
 import InboxPage from "./pages/Buyer/InboxPage";
 import OrdersPage from "./pages/Buyer/OrdersPage";
 import SellerCenterPage from "./pages/Seller/SellerCenterPage";
-import ProductsSection from "./components/Buyer/ProductsSection"; // Import ProductsSection
-import { db } from "./firebase"; // Import Firebase Firestore
+import ProductsSection from "./components/Buyer/ProductsSection"; 
+import { db } from "./firebase"; 
 import { collection, getDocs } from "firebase/firestore";
-import { useParams } from "react-router-dom"; // Import useParams
+import { useParams } from "react-router-dom"; 
 
 function App() {
-  // 🔥 Check Firebase connection on app load
+  // FIREBASE CONNECTIVITY CHECK
   useEffect(() => {
     const testFirebaseConnection = async () => {
       try {
-        const querySnapshot = await getDocs(collection(db, "messages")); // Change "messages" to a valid collection in Firestore
+        const querySnapshot = await getDocs(collection(db, "messages")); 
         querySnapshot.forEach((doc) => {
           console.log(`✅ Firestore Data: ${doc.id} =>`, doc.data());
         });
@@ -27,6 +27,7 @@ function App() {
     testFirebaseConnection();
   }, []);
 
+  // ROUTING AND DYNAMIC LOADING FOR CATEGORIES
   return (
     <Router>
       <Routes>
@@ -34,19 +35,16 @@ function App() {
         <Route path="/inbox" element={<InboxPage />} />
         <Route path="/seller-center" element={<SellerCenterPage />} />
         <Route path="/orders" element={<OrdersPage />} />
-        
-        {/* Updated route to match subcategory format */}
         <Route path="/subcategories/:category/:subcategory" element={<ProductsWithSubcategory />} />
       </Routes>
     </Router>
   );
 }
 
-// New component to handle dynamic category and subcategory
 const ProductsWithSubcategory = () => {
-  const { category, subcategory } = useParams(); // Get both category and subcategory from the URL
-  console.log("Category and Subcategory:", category, subcategory); // Debug log
-  return <ProductsSection category={category} subcategory={subcategory} />; // Pass category and subcategory to ProductsSection
+  const { category, subcategory } = useParams(); 
+  console.log("Category and Subcategory:", category, subcategory); 
+  return <ProductsSection category={category} subcategory={subcategory} />; 
 };
 
 export default App;

@@ -46,7 +46,6 @@ const SellerDashboard = () => {
   );
 };
 
-// Minimal styling
 const styles = {
   container: {
     padding: "20px",

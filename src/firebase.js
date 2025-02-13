@@ -1,11 +1,9 @@
-// src/firebase.js
 import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 import { getAnalytics, isSupported } from "firebase/analytics"; // Ensure correct imports
 import { getStorage } from "firebase/storage";
 
-// 🔥 Your Firebase Config (Replace with your actual config)
 const firebaseConfig = {
   apiKey: "AIzaSyAR_apVG1gRItYNd0p0b_VVGdC3HIlPMI4",
   authDomain: "kalikha-5e87c.firebaseapp.com",
@@ -16,13 +14,11 @@ const firebaseConfig = {
   measurementId: "G-LT9TQ6NLMW"
 };
 
-// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const auth = getAuth(app);
 const storage = getStorage(app);
 
-// ✅ Conditionally initialize Analytics
 let analytics;
 isSupported()
   .then((supported) => {
