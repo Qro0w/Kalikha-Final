@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { db } from "../../firebase"; // Adjust import based on your project structure
 import { collection, doc, getDoc, setDoc, addDoc, serverTimestamp } from "firebase/firestore";
@@ -8,8 +8,8 @@ const ProductModal = ({ product, onClose }) => {
   const [selectedImage, setSelectedImage] = useState(product.images?.[0] || "/assets/pics/product.png");
   const [offerAmount, setOfferAmount] = useState(""); // Store user input for offer
   const [user, setUser] = useState({
-    uid: "mock_user_uid", // Use a placeholder user ID for now
-    name: "Mock User", // Use a placeholder user name for now
+    uid: "user_123", // Use the mock user ID
+    name: "Mock User", // Use the mock user name
   });
 
   // Function to send an offer message
@@ -17,11 +17,11 @@ const ProductModal = ({ product, onClose }) => {
     if (!offerAmount) return alert("Please enter an offer amount.");
   
     try {
-      const buyerId = "mock_user_uid"; // Use a mock user ID for now
-      const sellerId = product.seller?.id || "mock_seller_id"; // If no seller ID, use a mock seller ID
+      const buyerId = "user_123"; // Use the mock user ID
+      const sellerId = product.seller?.id || "seller_123"; // Ensure we're using the mock seller ID
   
       // Generate a unique conversation ID (for now, based on mock user IDs)
-      const convoId = buyerId < sellerId ? `${buyerId}_${sellerId}` : `${sellerId}_${buyerId}`;
+      const convoId = `${buyerId}-${sellerId}`;
   
       // Reference to the conversation document
       const convoRef = doc(db, "conversations", convoId);
@@ -39,25 +39,21 @@ const ProductModal = ({ product, onClose }) => {
       // Reference to the messages subcollection
       const messagesRef = collection(db, "conversations", convoId, "messages");
   
-      // Add the message to the conversation
+      // Add the offer message to the conversation
       await addDoc(messagesRef, {
         sender: buyerId,
         recipient: sellerId,
         text: `Offer: ₱${offerAmount}`,
         timestamp: serverTimestamp(),
-        type: "offer", // Message type can be optional
         imageURL: "", // No image for now
       });
   
-      // Navigate to the inbox page
+      // Navigate to the inbox page after sending the offer
       navigate("/inbox");
     } catch (error) {
       console.error("Error sending offer:", error);
     }
   };
-  
-  
-  
 
   return (
     <div id="modal-overlay" style={styles.overlay} onClick={(e) => e.target.id === "modal-overlay" && onClose()}>

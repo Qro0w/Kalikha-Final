@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { db } from "../../firebase";
-import { collection, addDoc, serverTimestamp, query, orderBy, getDocs } from "firebase/firestore";
+import { collection, addDoc, serverTimestamp, query, orderBy, getDocs, getDoc, doc, setDoc, onSnapshot } from "firebase/firestore";
 import uploadImage from "../../utils/uploadImage";
 import { useNavigate } from "react-router-dom"; // Import for navigation
 
@@ -15,18 +15,41 @@ const InboxPage = () => {
   });
 
   const navigate = useNavigate(); // Hook for navigating back
-  const conversationId = "user_123-seller_123";
+  const conversationId = "user_123-seller_321"; // Ensure we're using the correct conversationId for mock users
   const messagesEndRef = useRef(null);
 
+  // Fetch messages from the conversation
   const fetchMessages = async () => {
     try {
-      const messagesRef = collection(db, "conversations", conversationId, "messages");
-      const q = query(messagesRef, orderBy("timestamp", "asc"));
-      const querySnapshot = await getDocs(q);
-      const fetchedMessages = querySnapshot.docs.map(doc => doc.data());
-      setMessages(fetchedMessages);
+      const conversationRef = doc(db, "conversations", conversationId);
+      const conversationSnapshot = await getDoc(conversationRef);
+
+      if (conversationSnapshot.exists()) {
+        // Listen for real-time updates on the conversation messages
+        const messagesRef = collection(conversationRef, "messages");
+        const q = query(messagesRef, orderBy("timestamp", "asc"));
+        onSnapshot(q, (querySnapshot) => {
+          const newMessages = querySnapshot.docs.map(doc => doc.data());
+          setMessages(newMessages);
+        });
+      } else {
+        console.log("Conversation doesn't exist, creating...");
+        await setDoc(conversationRef, {
+          users: ["user_123", "seller_321"],
+          timestamp: serverTimestamp(),
+        });
+      }
+
+      // Fetch recipient profile
+      const recipientId = "seller_321"; // Ensure recipient is set
+      const recipientProfileRef = doc(db, "users", recipientId);
+      const recipientProfileSnapshot = await getDoc(recipientProfileRef);
+  
+      if (recipientProfileSnapshot.exists()) {
+        setRecipientProfile(recipientProfileSnapshot.data());
+      }
     } catch (error) {
-      console.error("Error fetching messages:", error);
+      console.error("Error fetching messages or profiles:", error);
     }
   };
 
@@ -40,6 +63,8 @@ const InboxPage = () => {
 
   const handleSendMessage = async (e) => {
     e.preventDefault();
+    console.log("Sending message...");
+
     setIsLoading(true);
     let imageURL = null;
 
@@ -52,17 +77,29 @@ const InboxPage = () => {
     }
 
     try {
+      const conversationRef = doc(db, "conversations", conversationId);
+      const conversationSnapshot = await getDoc(conversationRef);
+
+      if (!conversationSnapshot.exists()) {
+        console.log("Conversation doesn't exist, creating...");
+        await setDoc(conversationRef, {
+          users: ["user_123", "seller_321"],
+          timestamp: serverTimestamp(),
+        });
+      }
+
+      console.log("Adding message...");
       await addDoc(collection(db, "conversations", conversationId, "messages"), {
         sender: "user_123",
-        recipient: "seller_123",
+        recipient: "seller_321",
         text: message,
         imageURL: imageURL,
         timestamp: serverTimestamp(),
         type: image ? "image" : "text",
       });
+
       setMessage("");
       setImage(null);
-      fetchMessages();
     } catch (error) {
       console.error("Error sending message:", error);
     } finally {
@@ -83,9 +120,12 @@ const InboxPage = () => {
 
       <div style={styles.container}>
         <div style={styles.userListContainer}>
-          <h3>User List</h3>
-          <div style={styles.userBox}>User 1</div>
-          <div style={styles.userBox}>User 2</div>
+          <h3>Conversation with:</h3>
+          <div style={styles.userBox} key={recipientProfile.name}>
+            <div style={{ backgroundColor: "#d3f3ff", padding: "10px", borderRadius: "5px" }}>
+              {recipientProfile.name}
+            </div>
+          </div>
         </div>
 
         <div style={styles.divider}></div>
@@ -96,31 +136,30 @@ const InboxPage = () => {
             <h3>{recipientProfile.name}</h3>
           </div>
 
-            <div style={styles.messages}>
-              {messages.map((message, index) => (
-                <div
-                  key={index}
-                  style={{
-                    ...styles.message,
-                    alignSelf: message.sender === "user_123" ? "flex-end" : "flex-start",
-                    backgroundColor: message.sender === "user_123" ? "#007bff" : "#f1f1f1",
-                    color: message.sender === "user_123" ? "#fff" : "#000",
-                  }}
-                >
-                  {message.type === "image" ? (
-                    <img src={message.imageURL} alt="Attachment" style={styles.messageImage} />
-                  ) : message.type === "offer" ? (
-                    <div style={styles.offerMessage}>
-                      <p><strong>Offer: ₱{message.text}</strong></p>
-                    </div>
-                  ) : (
-                    <p>{message.text}</p>
-                  )}
-                </div>
-              ))}
-              <div ref={messagesEndRef} />
-            </div>
-
+          <div style={styles.messages}>
+            {messages.map((message, index) => (
+              <div
+                key={index}
+                style={{
+                  ...styles.message,
+                  alignSelf: message.sender === "user_123" ? "flex-end" : "flex-start",
+                  backgroundColor: message.sender === "user_123" ? "#007bff" : "#f1f1f1",
+                  color: message.sender === "user_123" ? "#fff" : "#000",
+                }}
+              >
+                {message.type === "image" ? (
+                  <img src={message.imageURL} alt="Attachment" style={styles.messageImage} />
+                ) : message.type === "offer" ? (
+                  <div style={styles.offerMessage}>
+                    <p><strong>Offer: ₱{message.text}</strong></p>
+                  </div>
+                ) : (
+                  <p>{message.text}</p>
+                )}
+              </div>
+            ))}
+            <div ref={messagesEndRef} />
+          </div>
 
           <form onSubmit={handleSendMessage} style={styles.form}>
             <input
@@ -243,3 +282,4 @@ const styles = {
 };
 
 export default InboxPage;
+
