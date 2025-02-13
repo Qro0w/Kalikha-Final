@@ -1,8 +1,59 @@
-// src/components/Buyer/InboxWidget.jsx
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { db } from "../../firebase";
+import { collection, query, where, orderBy, limit, getDocs } from "firebase/firestore";
+
+const userId = "user_123"; // USER ID FOR TESTING NO LOGIN
 
 const InboxWidget = ({ isOpen, onToggle, icon }) => {
+  const [messages, setMessages] = useState([]);
+
+  useEffect(() => {
+    if (!isOpen) return; 
+
+    const fetchConversations = async () => {
+      try {
+        const conversationsRef = collection(db, "conversations");
+
+        // FILTER CONVERSATIONS WHERE user_123 IS IN PARTICIPANTS 
+        const q = query(conversationsRef, where("participants", "array-contains", userId));
+        const conversationSnapshot = await getDocs(q);
+        
+        const latestMessages = [];
+
+        for (const doc of conversationSnapshot.docs) {
+          const conversationId = doc.id;
+          const conversationData = doc.data();
+
+          const participants = conversationData.participants;
+
+          // GET MOST RECENT MESSAGE
+          if (Array.isArray(participants) && participants.indexOf(userId) !== -1) {
+            const messagesRef = collection(db, "conversations", conversationId, "messages");
+            const messagesQuery = query(messagesRef, orderBy("timestamp", "desc"), limit(1));
+            const messagesSnapshot = await getDocs(messagesQuery);
+
+            if (!messagesSnapshot.empty) {
+              const latestMessage = messagesSnapshot.docs[0].data();
+              latestMessages.push({
+                id: messagesSnapshot.docs[0].id,
+                senderId: latestMessage.sender,
+                text: latestMessage.text,
+                timestamp: latestMessage.timestamp,
+              });
+            }
+          }
+        }
+
+        setMessages(latestMessages);
+      } catch (error) {
+        console.error("Error fetching messages:", error);
+      }
+    };
+
+    fetchConversations();
+  }, [isOpen]);
+
   return (
     <div style={styles.container}>
       <div onClick={onToggle} style={styles.icon}>
@@ -10,17 +61,20 @@ const InboxWidget = ({ isOpen, onToggle, icon }) => {
       </div>
       {isOpen && (
         <div style={styles.dropdown}>
-          {/* Recent Messages */}
-          <div style={styles.message}>
-            <p>Seller XYZ: Your order has been shipped!</p>
-            <button style={styles.actionButton}>Reply</button>
-          </div>
-          <div style={styles.message}>
-            <p>Seller ABC: Your order is out for delivery.</p>
-            <button style={styles.actionButton}>Reply</button>
-          </div>
+          {/* MESSAGE RENDERING */}
+          {messages.length > 0 ? (
+            messages.map((msg) => (
+              <div key={msg.id} style={styles.message}>
+                <p>
+                  <strong>{msg.senderId === userId ? "Me" : msg.senderId}:</strong> {msg.text}
+                </p>
+                <button style={styles.actionButton}>Reply</button>
+              </div>
+            ))
+          ) : (
+            <p>No new messages</p>
+          )}
 
-          {/* Link to Inbox Page */}
           <Link to="/inbox" style={styles.inboxLink}>
             Go to Inbox
           </Link>
@@ -30,7 +84,7 @@ const InboxWidget = ({ isOpen, onToggle, icon }) => {
   );
 };
 
-// Minimal styling
+
 const styles = {
   container: {
     position: "relative",

@@ -1,22 +1,23 @@
 import React, { useState } from "react";
 import SellerDashboard from "../../components/Seller/SellerDashboard";
-import Navbar from "../../components/Buyer/Navbar"; // Adjust the path based on your project structure
+import Navbar from "../../components/Buyer/Navbar"; 
+
+// SELLER CENTER EMPTY
 
 const SellerCenterPage = () => {
-  const [activeTab, setActiveTab] = useState("dashboard"); // Default to dashboard
+  const [activeTab, setActiveTab] = useState("dashboard"); 
 
   return (
     <div>
-      <Navbar /> {/* Integrated Navbar here */}
+      <Navbar /> 
       <div style={styles.container}>
         {activeTab === "dashboard" && <SellerDashboard />}
-        {/* Add more tabs as needed */}
       </div>
     </div>
   );
 };
 
-// Minimal styling
+
 const styles = {
   container: {
     padding: "20px",

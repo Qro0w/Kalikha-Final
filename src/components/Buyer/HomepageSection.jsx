@@ -4,11 +4,11 @@ import { Link } from "react-scroll";
 const HomepageSection = () => {
   return (
     <div style={styles.container}>
-      {/* Background Image */}
+
       <div style={styles.background}>
-        {/* Overlaying Content */}
+  
         <div style={styles.contentBox}>
-          {/* Three Titles Positioned on Top of Image Grid */}
+ 
           <div style={styles.titleContainer}>
             <h1 style={styles.title}>EXPLORE TALENT,</h1>
             <h1 style={styles.title}>BUY ART,</h1>
@@ -20,7 +20,7 @@ const HomepageSection = () => {
             <img src="/assets/home/image3.png" alt="Art 3" style={styles.image} />
             <img src="/assets/home/image4.png" alt="Art 4" style={styles.image} />
           </div>
-          {/* Scroll Down Arrow Below the Images */}
+
           <Link to="categories" smooth={true} duration={800} style={styles.arrow}>
             &#8595;
           </Link>
@@ -32,8 +32,7 @@ const HomepageSection = () => {
 
 const styles = {
   container: {
-    paddingTop: "200px", // Adjusted to give space for the navbar
-    position: "relative",
+    paddingTop: "200px", 
     height: "50vh",
     display: "flex",
     justifyContent: "center",

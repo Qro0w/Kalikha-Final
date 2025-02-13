@@ -1,4 +1,3 @@
-// src/pages/Buyer/LandingPage.jsx
 import React from "react";
 import Navbar from "../../components/Buyer/Navbar";
 import HomepageSection from "../../components/Buyer/HomepageSection";
@@ -18,14 +17,14 @@ const LandingPage = () => {
   );
 };
 
-// Minimal styling
+
 const styles = {
   bodypage: {
     backgroundColor: "#808080",
-    overflowY: "scroll", // Allow scrolling
+    overflowY: "scroll", 
     overflowX: "hidden",
-    scrollbarWidth: "none", // Firefox
-    msOverflowStyle: "none", // IE/Edge
+    scrollbarWidth: "none", 
+    msOverflowStyle: "none", 
   },
   container: {
     backgroundColor: "#f8f9fa",

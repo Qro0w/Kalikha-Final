@@ -1,7 +1,6 @@
-// src/components/Buyer/CategorySection.jsx
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import ProductsSection from "./ProductsSection"; // Import the ProductsSection component
+import ProductsSection from "./ProductsSection"; 
 
 const categories = [
   {
@@ -46,13 +45,13 @@ const categories = [
   },
 ];
 
+// CATEGORY FILTERING (+BACKEND)
 const CategorySection = () => {
   const [hoveredIndex, setHoveredIndex] = useState(null);
-  const [selectedSubcategory, setSelectedSubcategory] = useState(null); // Store selected subcategory
+  const [selectedSubcategory, setSelectedSubcategory] = useState(null); 
 
-  // Handle subcategory selection to display products in the current page
   const handleSubcategoryClick = (subcategory) => {
-    setSelectedSubcategory(subcategory); // Set the selected subcategory
+    setSelectedSubcategory(subcategory); 
   };
 
   return (
@@ -102,7 +101,7 @@ const CategorySection = () => {
         ))}
       </div>
 
-      {/* Render the ProductsSection component below categories when a subcategory is selected */}
+      {/* PRODUCT RENDERING ON PRODUCT SECTION */}
       {selectedSubcategory && (
         <div style={styles.productsSection}>
           <h3 style={styles.selectedSubcategoryTitle}>{selectedSubcategory}</h3>

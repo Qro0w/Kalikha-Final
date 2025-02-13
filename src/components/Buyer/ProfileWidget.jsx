@@ -1,9 +1,10 @@
 import React from "react";
 
+//PROFILE WIDGET STATIC
+
 const ProfileWidget = ({ isOpen, onToggle, icon }) => {
   return (
     <div style={styles.container}>
-      {/* Render the profile icon only when it's not open */}
       {!isOpen && (
         <div onClick={onToggle} style={styles.icon}>
           {icon}
@@ -20,10 +21,10 @@ const ProfileWidget = ({ isOpen, onToggle, icon }) => {
   );
 };
 
-// Minimal styling
+
 const styles = {
   container: {
-    position: "relative", // This ensures the dropdown is positioned relative to the container
+    position: "relative", 
   },
   icon: {
     cursor: "pointer",
@@ -36,7 +37,7 @@ const styles = {
     padding: "10px",
     width: "200px",
     boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
-    zIndex: 1200, // Keep it above other content
+    zIndex: 1200, 
   },
   actionButton: {
     marginTop: "5px",

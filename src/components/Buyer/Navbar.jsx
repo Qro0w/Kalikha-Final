@@ -10,7 +10,7 @@ const Navbar = () => {
   const [activeWidget, setActiveWidget] = useState(null);
   const [visible, setVisible] = useState(true);
   const [profileColor, setProfileColor] = useState("#333");
-  const [searchQuery, setSearchQuery] = useState(""); // State for search query
+  const [searchQuery, setSearchQuery] = useState(""); 
   let lastScrollY = window.scrollY;
 
   useEffect(() => {
@@ -34,13 +34,13 @@ const Navbar = () => {
     e.stopPropagation();
     const newActiveWidget = activeWidget === "profile" ? null : "profile";
     setActiveWidget(newActiveWidget);
-    setProfileColor(newActiveWidget ? "#007bff" : "#333");  // Highlight color for active widget
+    setProfileColor(newActiveWidget ? "#007bff" : "#333"); 
   };
 
-  // Handle the search input change
+  {/* SEARCH BAR (TESTING) */}
   const handleSearchChange = (e) => {
     setSearchQuery(e.target.value);
-    // Add filtering logic here if needed
+
     console.log("Searching for: ", e.target.value);
   };
 
@@ -53,32 +53,33 @@ const Navbar = () => {
       }}
       onClick={closeWidgets}
     >
-      {/* Logo */}
+
       <Link to="/" style={styles.logo}>
         Kalikha
       </Link>
 
-      {/* Search and Filter */}
+      {/* SEARCH BAR (TESTING) */}
       <div style={styles.searchFilter}>
         <input
           type="text"
           placeholder="Search products..."
-          value={searchQuery} // Bind the input to searchQuery state
-          onChange={handleSearchChange} // Update searchQuery on input change
+          value={searchQuery} 
+          onChange={handleSearchChange} 
           style={styles.searchInput}
         />
       </div>
 
-      {/* Right Side Links */}
       <div style={styles.navRight} onClick={(e) => e.stopPropagation()}>
         <Link to="/seller-center" style={styles.link}>Seller Center</Link>
         <Link to="/orders" style={styles.link}>My Orders</Link>
 
-        {/* Widgets */}
+                                                 {/* WIDGETS */}
         <InboxWidget
           isOpen={activeWidget === "inbox"}
           onToggle={() => setActiveWidget(activeWidget === "inbox" ? null : "inbox")}
           icon={<FaInbox size={20} />}
+          userId="user_123" 
+          //userId={userId} (FOR FUTURE LOGIN INTEGRATION)
         />
         <WishlistWidget
           isOpen={activeWidget === "wishlist"}
@@ -91,7 +92,7 @@ const Navbar = () => {
           icon={<FaBell size={20} />}
         />
 
-        {/* Profile Widget */}
+        {/* PROFILE */}
         <div onClick={handleProfileClick} style={styles.iconLink}>
           <FaUser size={20} style={{ transition: "color 0.3s ease", color: profileColor }} />
         </div>
@@ -109,7 +110,7 @@ const Navbar = () => {
   );
 };
 
-// Styles
+
 const styles = {
   navbar: {
     position: "fixed",

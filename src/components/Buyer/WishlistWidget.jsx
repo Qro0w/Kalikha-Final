@@ -1,4 +1,3 @@
-// src/components/Buyer/WishlistWidget.jsx
 import React from "react";
 
 const WishlistWidget = ({ isOpen, onToggle, icon }) => {
@@ -23,7 +22,6 @@ const WishlistWidget = ({ isOpen, onToggle, icon }) => {
   );
 };
 
-// Minimal styling
 const styles = {
   container: {
     position: "relative",

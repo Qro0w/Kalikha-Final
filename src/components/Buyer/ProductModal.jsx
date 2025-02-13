@@ -1,33 +1,32 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { db } from "../../firebase"; // Adjust import based on your project structure
+import { db } from "../../firebase"; 
 import { collection, doc, getDoc, setDoc, addDoc, serverTimestamp } from "firebase/firestore";
 
 const ProductModal = ({ product, onClose }) => {
   const navigate = useNavigate();
   const [selectedImage, setSelectedImage] = useState(product.images?.[0] || "/assets/pics/product.png");
-  const [offerAmount, setOfferAmount] = useState(""); // Store user input for offer
+  const [offerAmount, setOfferAmount] = useState(""); 
   const [user, setUser] = useState({
-    uid: "user_123", // Use the mock user ID
-    name: "Mock User", // Use the mock user name
+    uid: "user_123", // USER ID FOR TESTING NO LOGIN
+    name: "Mock User", // PLACEHOLDER NAME
   });
 
-  // Function to send an offer message
+  // SEND OFFER
   const handleMakeOffer = async () => {
     if (!offerAmount) return alert("Please enter an offer amount.");
   
+    // NEW CONVO GENERATOR
     try {
-      const buyerId = "user_123"; // Use the mock user ID
-      const sellerId = product.seller?.id || "seller_123"; // Ensure we're using the mock seller ID
+      const buyerId = "user_123"; 
+      const sellerId = product.seller?.id || "seller_123"; 
   
-      // Generate a unique conversation ID (for now, based on mock user IDs)
       const convoId = `${buyerId}-${sellerId}`;
   
-      // Reference to the conversation document
       const convoRef = doc(db, "conversations", convoId);
       const convoSnap = await getDoc(convoRef);
   
-      // If the conversation doesn't exist, create a new one
+
       if (!convoSnap.exists()) {
         await setDoc(convoRef, {
           participants: [buyerId, sellerId],
@@ -36,19 +35,16 @@ const ProductModal = ({ product, onClose }) => {
         });
       }
   
-      // Reference to the messages subcollection
       const messagesRef = collection(db, "conversations", convoId, "messages");
   
-      // Add the offer message to the conversation
       await addDoc(messagesRef, {
         sender: buyerId,
         recipient: sellerId,
         text: `Offer: ₱${offerAmount}`,
         timestamp: serverTimestamp(),
-        imageURL: "", // No image for now
+        imageURL: "", // NO IMAGE YET
       });
   
-      // Navigate to the inbox page after sending the offer
       navigate("/inbox");
     } catch (error) {
       console.error("Error sending offer:", error);
@@ -115,7 +111,6 @@ const ProductModal = ({ product, onClose }) => {
 };
 
 
-// Updated Styles (Make Offer Section Fixed)
 const styles = {
   overlay: {
     width: "100%",

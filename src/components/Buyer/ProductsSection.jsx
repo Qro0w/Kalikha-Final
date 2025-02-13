@@ -11,16 +11,14 @@ const ProductsSection = ({ subcategory }) => {
       try {
         if (!subcategory) {
           console.log("No subcategory available.");
-          setLoading(false);  // Stop loading if subcategory is undefined
+          setLoading(false);  
           return;
         }
 
         const db = getFirestore();
-
-        // Normalize the subcategory to match Firestore's case (e.g., "Painting" -> "Painting")
         const normalizedSubcategory = subcategory.charAt(0).toUpperCase() + subcategory.slice(1);
 
-        // Determine the category for the selected subcategory
+        // MAPPING SUBCATEGORY TO CATEGORY
         const categoryMapping = {
           "Painting": "Visual Arts",
           "Sculpture": "Visual Arts",
@@ -47,11 +45,11 @@ const ProductsSection = ({ subcategory }) => {
           return;
         }
 
-        // Log the Firestore path we are querying
+        // FIRESTORE QUERY
         console.log(`Executing Firestore query for subcategory: ${normalizedSubcategory}`);
         console.log(`Firestore path: categories/${category}/${normalizedSubcategory}`);
 
-        // Fetch products under the subcategory
+        // FETCH UNDER SUBCATEGORY
         const productsRef = collection(db, "categories", category, normalizedSubcategory);
         const q = query(productsRef);
 

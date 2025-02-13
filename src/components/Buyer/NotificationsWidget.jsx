@@ -1,5 +1,6 @@
-// src/components/Buyer/NotificationsWidget.jsx
 import React from "react";
+
+// NOTIFICATIONS STATIC FOR NOW
 
 const NotificationsWidget = ({ isOpen, onToggle, icon }) => {
   return (
@@ -23,7 +24,6 @@ const NotificationsWidget = ({ isOpen, onToggle, icon }) => {
   );
 };
 
-// Minimal styling
 const styles = {
   container: {
     position: "relative",

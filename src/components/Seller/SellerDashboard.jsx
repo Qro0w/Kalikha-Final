@@ -1,5 +1,6 @@
-// src/components/Seller/SellerDashboard.jsx
 import React, { useState } from "react";
+
+// STATIC SELLER CENTER DASHBOARD
 
 const SellerDashboard = () => {
   const [productName, setProductName] = useState("");
@@ -8,7 +9,7 @@ const SellerDashboard = () => {
 
   const handleUploadProduct = (e) => {
     e.preventDefault();
-    // Handle product upload logic here
+
     console.log("Product Uploaded:", { productName, productDescription, productPrice });
   };
 

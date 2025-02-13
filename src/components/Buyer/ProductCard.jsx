@@ -9,7 +9,7 @@ const ProductCard = ({ product }) => {
   return (
     <div style={styles.card} onClick={() => setIsModalOpen(true)}>
 
-      {/* Display seller information (Only if seller exists) */}
+      {/* DISPLAY SELLER INFO (+BACKEND) */}
       {product.seller && (
         <div style={styles.sellerInfo}>
           <img
@@ -23,21 +23,15 @@ const ProductCard = ({ product }) => {
         </div>
       )}
 
-      {/* Display product image */}
+      {/* IMAGE STILL STATIC */}
       <img src={productImage} alt={product.name} style={styles.image} />
       
       <div style={styles.details}>
-        {/* Product Name */}
         <h3 style={styles.productName}>{product.name || "Unnamed Product"}</h3>
-        
-        {/* Product Description */}
         <p style={styles.description}>{product.description || "No description available."}</p>
-        
-        {/* Product Price */}
         <p style={styles.price}><strong>Price:</strong> ₱{product.price || "N/A"}</p>
       </div>
 
-      {/* Product Modal */}
       {isModalOpen && (
         <ProductModal 
           product={product} 
